@@ -1,5 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import { ApolloServer } from 'apollo-server-express';
+import typeDefs from './graphql/schema';
+import resolvers from './graphql/resolvers';
 
 mongoose.connect('mongodb://localhost/flashcards_db', {
   useNewUrlParser: true,
@@ -9,6 +12,10 @@ mongoose.connect('mongodb://localhost/flashcards_db', {
 const app = express();
 const PORT = 4000;
 
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.applyMiddleware({ app });
+
 app.get('/', (req, res) => {
   res.send('It works!');
 });
@@ -16,3 +23,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is listening on port: ${PORT}`);
 });
+
